@@ -9,6 +9,8 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)
 
+**[Live demo](https://younes-alaoui-ismaili.github.io/IoT-Simulation-and-Monitoring-System/)**
+
 A single-page dashboard that visualizes live device telemetry (temperature, humidity, power, signal) in real-time line charts. Instead of a backend, it ships a **simulated data layer**: a React hook generates and mutates device metrics on a fixed tick, which keeps the project fully self-contained and runnable with a single command, and makes it an easy base to later swap for a real data source (WebSocket, REST, or a message stream).
 
 ## Screenshots
