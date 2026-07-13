@@ -40,21 +40,31 @@ describe('useSimulatedData', () => {
     });
   });
 
-  it('records a timestamped audit entry when acknowledging an alert', () => {
+  it('seeds demo alerts on mount', () => {
     const { result } = renderHook(() => useSimulatedData());
 
+    expect(result.current.alerts).toHaveLength(2);
+    expect(result.current.alerts.every(a => !a.acknowledged)).toBe(true);
+  });
+
+  it('acknowledges a seeded alert and records a timestamped audit entry', () => {
+    const { result } = renderHook(() => useSimulatedData());
+    const target = result.current.alerts[0];
+
+    expect(target.acknowledged).toBe(false);
     expect(result.current.auditLogs).toHaveLength(0);
 
     act(() => {
-      result.current.acknowledgeAlert('alert-42');
+      result.current.acknowledgeAlert(target.id);
     });
 
+    expect(result.current.alerts.find(a => a.id === target.id)?.acknowledged).toBe(true);
     expect(result.current.auditLogs).toHaveLength(1);
     const entry = result.current.auditLogs[0];
     expect(entry).toMatchObject({
       action: 'update',
       resource: 'alert',
-      resourceId: 'alert-42',
+      resourceId: target.id,
       details: { acknowledged: true }
     });
     // The timestamp is a valid, round-trippable ISO string.

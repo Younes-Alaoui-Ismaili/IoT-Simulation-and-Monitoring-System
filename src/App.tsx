@@ -74,7 +74,7 @@ function App() {
                 )}
               </h2>
               <AlertsList
-                alerts={alerts.slice().reverse()}
+                alerts={activeAlerts.slice().reverse()}
                 onAcknowledge={acknowledgeAlert}
               />
             </div>

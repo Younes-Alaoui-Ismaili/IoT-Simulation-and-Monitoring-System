@@ -80,6 +80,29 @@ export function useSimulatedData() {
     setDevices(initialDevices);
   }, []);
 
+  // Seed a couple of demo alerts so the alert lifecycle is observable
+  useEffect(() => {
+    const now = new Date().toISOString();
+    setAlerts([
+      {
+        id: 'alert-temp-1',
+        deviceId: '1',
+        severity: 'high',
+        message: 'Temperature Sensor 1 exceeded its temperature threshold',
+        timestamp: now,
+        acknowledged: false
+      },
+      {
+        id: 'alert-signal-2',
+        deviceId: '2',
+        severity: 'medium',
+        message: 'Power Monitor 1 signal strength is degraded',
+        timestamp: now,
+        acknowledged: false
+      }
+    ]);
+  }, []);
+
   // Simulate metric updates on a fixed tick
   useEffect(() => {
     const updateData = () => {

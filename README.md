@@ -17,7 +17,7 @@ A single-page dashboard that visualizes live device telemetry (temperature, humi
 - **Real-time telemetry**: device metrics update on a 2-second tick and stream into the UI.
 - **Live charts**: time-series line charts (Recharts) with a rolling history window per metric.
 - **Device status cards**: per-device status, latest readings, and last-seen timestamp, with icon-based readouts (lucide-react).
-- **Alerts panel**: acknowledgeable alerts with an audit trail recorded in the data hook.
+- **Alerts panel**: seeded demo alerts you can acknowledge; each acknowledgement clears the alert and is recorded to an audit trail in the data hook.
 - **Dark mode ready**: Tailwind `dark:` styling throughout.
 - **Fully typed domain model**: device, alert, metric and audit types defined as TypeScript interfaces.
 
