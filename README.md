@@ -2,6 +2,7 @@
 
 > A front-end IoT monitoring dashboard built with React, TypeScript and Vite, driven by a self-contained simulated data layer.
 
+[![CI](https://github.com/Younes-Alaoui-Ismaili/IoT-Simulation-and-Monitoring-System/actions/workflows/ci.yml/badge.svg)](https://github.com/Younes-Alaoui-Ismaili/IoT-Simulation-and-Monitoring-System/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-prototype-blue)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
@@ -10,7 +11,11 @@
 
 A single-page dashboard that visualizes live device telemetry (temperature, humidity, power, signal) in real-time line charts. Instead of a backend, it ships a **simulated data layer**: a React hook generates and mutates device metrics on a fixed tick, which keeps the project fully self-contained and runnable with a single command, and makes it an easy base to later swap for a real data source (WebSocket, REST, or a message stream).
 
-<!-- SCREENSHOTS: inserted during the polish pass (docs/screenshots/dashboard.png). Kept as a comment for now so nothing renders broken. -->
+## Screenshots
+
+![IoT monitoring dashboard in dark mode: two simulated devices with live temperature and humidity line charts, and an alerts panel showing two active demo alerts](docs/screenshots/dashboard.png)
+
+![Close-up of the alerts panel with two acknowledgeable demo alerts, each showing a severity icon and an Acknowledge action](docs/screenshots/alerts-panel.png)
 
 ## Features
 
