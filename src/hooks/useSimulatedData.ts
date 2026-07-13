@@ -5,14 +5,34 @@ export function useSimulatedData() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [metrics, setMetrics] = useState<Record<string, MetricData[]>>({});
-  const [groups, setGroups] = useState<DeviceGroup[]>([]);
-  const [maintenanceLogs, setMaintenanceLogs] = useState<MaintenanceLog[]>([]);
-  const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
-  const [dashboardLayouts, setDashboardLayouts] = useState<DashboardLayout[]>([]);
+  const [groups] = useState<DeviceGroup[]>([]);
+  const [maintenanceLogs] = useState<MaintenanceLog[]>([]);
+  const [automationRules] = useState<AutomationRule[]>([]);
+  const [dashboardLayouts] = useState<DashboardLayout[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [isOnline, setIsOnline] = useState(true);
   const [lastSync, setLastSync] = useState<string | undefined>(undefined);
   const [retryCount, setRetryCount] = useState(0);
+
+  const addAuditLog = useCallback((
+    action: string,
+    resource: string,
+    resourceId: string,
+    details: Record<string, unknown>
+  ) => {
+    setAuditLogs(prev => [
+      {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        userId: 'local-user',
+        action,
+        resource,
+        resourceId,
+        timestamp: new Date().toISOString(),
+        details
+      },
+      ...prev
+    ]);
+  }, []);
 
   const acknowledgeAlert = useCallback((alertId: string) => {
     setAlerts(prev =>
@@ -23,7 +43,7 @@ export function useSimulatedData() {
       )
     );
     addAuditLog('update', 'alert', alertId, { acknowledged: true });
-  }, []);
+  }, [addAuditLog]);
 
   // Network status monitoring
   useEffect(() => {
@@ -84,8 +104,6 @@ export function useSimulatedData() {
 
   // Simulate data updates with network error handling
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
     const updateData = () => {
       if (!isOnline) {
         // Simulate random network recovery
@@ -161,7 +179,7 @@ export function useSimulatedData() {
       }
     };
 
-    interval = setInterval(updateData, 2000);
+    const interval = setInterval(updateData, 2000);
     return () => clearInterval(interval);
   }, [devices, isOnline]);
 

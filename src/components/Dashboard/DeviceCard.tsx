@@ -1,4 +1,3 @@
-import React from 'react';
 import { Device } from '../../types';
 import { Thermometer, Droplets, Zap, Signal, Circle } from 'lucide-react';
 

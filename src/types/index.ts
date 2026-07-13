@@ -77,7 +77,7 @@ export interface AutomationRule {
   };
   action: {
     type: 'notification' | 'deviceCommand' | 'maintenance';
-    params: Record<string, any>;
+    params: Record<string, unknown>;
   };
   enabled: boolean;
   createdAt: string;
@@ -92,7 +92,7 @@ export interface DashboardLayout {
     id: string;
     type: 'chart' | 'metrics' | 'alerts' | 'map' | 'custom';
     position: { x: number; y: number; w: number; h: number };
-    config: Record<string, any>;
+    config: Record<string, unknown>;
   }[];
   isDefault: boolean;
   createdAt: string;
@@ -106,5 +106,5 @@ export interface AuditLog {
   resource: string;
   resourceId: string;
   timestamp: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
 }

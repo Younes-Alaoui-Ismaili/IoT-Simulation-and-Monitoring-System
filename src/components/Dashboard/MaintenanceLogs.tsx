@@ -1,4 +1,3 @@
-import React from 'react';
 import { MaintenanceLog, Device } from '../../types';
 import { PenTool as Tool, CheckCircle, Clock, XCircle } from 'lucide-react';
 

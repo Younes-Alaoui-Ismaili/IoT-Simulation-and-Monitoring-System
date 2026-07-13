@@ -1,4 +1,3 @@
-import React from 'react';
 import { AutomationRule, Device } from '../../types';
 import { Play, Pause, Clock } from 'lucide-react';
 

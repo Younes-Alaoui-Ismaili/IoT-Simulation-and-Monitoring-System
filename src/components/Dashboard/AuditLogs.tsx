@@ -1,4 +1,3 @@
-import React from 'react';
 import { AuditLog } from '../../types';
 import { Activity, User, Calendar } from 'lucide-react';
 

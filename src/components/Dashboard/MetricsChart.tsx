@@ -1,4 +1,3 @@
-import React from 'react';
 import { MetricData } from '../../types';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -25,7 +24,7 @@ export function MetricsChart({ data, metricName, color }: MetricsChartProps) {
             tickFormatter={(timestamp) => new Date(timestamp).toLocaleTimeString()}
             stroke="#6B7280"
           />
-          <YAxis stroke="#6B7280" tickFormatter={(value) => Math.round(value)} />
+          <YAxis stroke="#6B7280" tickFormatter={(value) => String(Math.round(value))} />
           <Tooltip
             contentStyle={{
               backgroundColor: '#1F2937',
@@ -34,7 +33,7 @@ export function MetricsChart({ data, metricName, color }: MetricsChartProps) {
               color: '#F3F4F6'
             }}
             labelFormatter={(timestamp) => new Date(timestamp).toLocaleString()}
-            formatter={(value) => [Math.round(value), '']}
+            formatter={(value) => [Math.round(Number(value)), '']}
           />
           <Line
             type="monotone"

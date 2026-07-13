@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DeviceCard } from './components/Dashboard/DeviceCard';
 import { AlertsList } from './components/Dashboard/AlertsList';
 import { MetricsChart } from './components/Dashboard/MetricsChart';
@@ -15,14 +15,13 @@ function App() {
     devices,
     alerts,
     metrics,
-    groups,
     maintenanceLogs,
     automationRules,
     auditLogs,
     isOnline,
     lastSync,
     retryConnection,
-    acknowledgeAlert // Add this to the destructured values
+    acknowledgeAlert
   } = useSimulatedData();
 
   const [activeTab, setActiveTab] = useState<'dashboard' | 'map' | 'automation' | 'maintenance' | 'audit'>('dashboard');
