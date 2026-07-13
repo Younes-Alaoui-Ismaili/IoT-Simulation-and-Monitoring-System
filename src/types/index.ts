@@ -9,29 +9,13 @@ export interface Device {
     lng: number;
     address?: string;
   };
-  groupId?: string;
   metrics: {
     temperature?: number;
     humidity?: number;
     power?: number;
     signal?: number;
   };
-  maintenanceSchedule?: {
-    nextDate: string;
-    description: string;
-    assignedTo?: string;
-  };
   tags?: string[];
-}
-
-export interface DeviceGroup {
-  id: string;
-  name: string;
-  description?: string;
-  parentGroupId?: string;
-  devices: string[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Alert {
@@ -54,49 +38,6 @@ export interface MetricData {
   value: number;
   deviceId: string;
   metricType: string;
-}
-
-export interface MaintenanceLog {
-  id: string;
-  deviceId: string;
-  date: string;
-  description: string;
-  performedBy: string;
-  status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
-  notes?: string;
-}
-
-export interface AutomationRule {
-  id: string;
-  name: string;
-  condition: {
-    deviceId: string;
-    metric: string;
-    operator: '>' | '<' | '==' | '>=' | '<=';
-    value: number;
-  };
-  action: {
-    type: 'notification' | 'deviceCommand' | 'maintenance';
-    params: Record<string, unknown>;
-  };
-  enabled: boolean;
-  createdAt: string;
-  lastTriggered?: string;
-}
-
-export interface DashboardLayout {
-  id: string;
-  name: string;
-  userId: string;
-  widgets: {
-    id: string;
-    type: 'chart' | 'metrics' | 'alerts' | 'map' | 'custom';
-    position: { x: number; y: number; w: number; h: number };
-    config: Record<string, unknown>;
-  }[];
-  isDefault: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface AuditLog {

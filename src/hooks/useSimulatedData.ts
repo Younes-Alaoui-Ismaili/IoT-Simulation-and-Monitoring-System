@@ -1,18 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Device, Alert, MetricData, DeviceGroup, MaintenanceLog, AutomationRule, DashboardLayout, AuditLog } from '../types';
+import { Device, Alert, MetricData, AuditLog } from '../types';
 
 export function useSimulatedData() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [metrics, setMetrics] = useState<Record<string, MetricData[]>>({});
-  const [groups] = useState<DeviceGroup[]>([]);
-  const [maintenanceLogs] = useState<MaintenanceLog[]>([]);
-  const [automationRules] = useState<AutomationRule[]>([]);
-  const [dashboardLayouts] = useState<DashboardLayout[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
-  const [isOnline, setIsOnline] = useState(true);
-  const [lastSync, setLastSync] = useState<string | undefined>(undefined);
-  const [retryCount, setRetryCount] = useState(0);
 
   const addAuditLog = useCallback((
     action: string,
@@ -45,21 +38,7 @@ export function useSimulatedData() {
     addAuditLog('update', 'alert', alertId, { acknowledged: true });
   }, [addAuditLog]);
 
-  // Network status monitoring
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  // Simulate initial devices with more data
+  // Seed the simulated devices once
   useEffect(() => {
     const initialDevices: Device[] = [
       {
@@ -99,108 +78,70 @@ export function useSimulatedData() {
     ];
 
     setDevices(initialDevices);
-    setLastSync(new Date().toISOString());
   }, []);
 
-  // Simulate data updates with network error handling
+  // Simulate metric updates on a fixed tick
   useEffect(() => {
     const updateData = () => {
-      if (!isOnline) {
-        // Simulate random network recovery
-        if (Math.random() < 0.2) {
-          setIsOnline(true);
-          setRetryCount(0);
-        } else {
-          setRetryCount(prev => prev + 1);
-          return;
-        }
-      }
+      setDevices(prevDevices =>
+        prevDevices.map(device => {
+          const updatedMetrics = {
+            ...device.metrics,
+            temperature: device.metrics.temperature
+              ? Math.round(device.metrics.temperature + (Math.random() * 2 - 1))
+              : undefined,
+            humidity: device.metrics.humidity
+              ? Math.round(Math.max(0, Math.min(100, device.metrics.humidity + (Math.random() * 4 - 2))))
+              : undefined,
+            power: device.metrics.power
+              ? Math.round(device.metrics.power + (Math.random() * 10 - 5))
+              : undefined,
+            signal: device.metrics.signal
+              ? Math.round(Math.max(-100, Math.min(-30, device.metrics.signal + (Math.random() * 2 - 1))))
+              : undefined
+          };
 
-      try {
-        // Update devices
-        setDevices(prevDevices => 
-          prevDevices.map(device => {
-            const updatedMetrics = {
-              ...device.metrics,
-              temperature: device.metrics.temperature 
-                ? Math.round(device.metrics.temperature + (Math.random() * 2 - 1))
-                : undefined,
-              humidity: device.metrics.humidity
-                ? Math.round(Math.max(0, Math.min(100, device.metrics.humidity + (Math.random() * 4 - 2))))
-                : undefined,
-              power: device.metrics.power
-                ? Math.round(device.metrics.power + (Math.random() * 10 - 5))
-                : undefined,
-              signal: device.metrics.signal
-                ? Math.round(Math.max(-100, Math.min(-30, device.metrics.signal + (Math.random() * 2 - 1))))
-                : undefined
-            };
+          return {
+            ...device,
+            lastSeen: new Date().toISOString(),
+            metrics: updatedMetrics
+          };
+        })
+      );
 
-            return {
-              ...device,
-              lastSeen: new Date().toISOString(),
-              metrics: updatedMetrics
-            };
-          })
-        );
-
-        // Update metrics history
-        setMetrics(prevMetrics => {
-          const newMetrics = { ...prevMetrics };
-          devices.forEach(device => {
-            Object.entries(device.metrics).forEach(([key, value]) => {
-              if (value !== undefined) {
-                const metricKey = `${device.id}-${key}`;
-                const timestamp = new Date().toISOString();
-                newMetrics[metricKey] = [
-                  ...(newMetrics[metricKey] || []).slice(-50),
-                  { 
-                    timestamp,
-                    value: Math.round(value),
-                    deviceId: device.id,
-                    metricType: key
-                  }
-                ];
-              }
-            });
+      setMetrics(prevMetrics => {
+        const newMetrics = { ...prevMetrics };
+        devices.forEach(device => {
+          Object.entries(device.metrics).forEach(([key, value]) => {
+            if (value !== undefined) {
+              const metricKey = `${device.id}-${key}`;
+              const timestamp = new Date().toISOString();
+              newMetrics[metricKey] = [
+                ...(newMetrics[metricKey] || []).slice(-50),
+                {
+                  timestamp,
+                  value: Math.round(value),
+                  deviceId: device.id,
+                  metricType: key
+                }
+              ];
+            }
           });
-          return newMetrics;
         });
-
-        setLastSync(new Date().toISOString());
-
-        // Simulate random network errors
-        if (Math.random() < 0.05) {
-          throw new Error('Network error');
-        }
-      } catch (error) {
-        console.error('Error updating data:', error);
-        setIsOnline(false);
-      }
+        return newMetrics;
+      });
     };
 
     const interval = setInterval(updateData, 2000);
     return () => clearInterval(interval);
-  }, [devices, isOnline]);
-
-  const retryConnection = useCallback(() => {
-    setIsOnline(true);
-    setRetryCount(0);
-  }, []);
+  }, [devices]);
 
   return {
     devices,
     alerts,
     metrics,
-    groups,
-    maintenanceLogs,
-    automationRules,
-    dashboardLayouts,
     auditLogs,
-    isOnline,
-    lastSync,
-    retryCount,
-    retryConnection,
+    addAuditLog,
     acknowledgeAlert
   };
 }
